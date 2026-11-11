@@ -1,0 +1,26 @@
+import hashlib
+
+def gerador_2(entrada):
+    # Só aceita 3 caracteres
+    if len(entrada) != 3:
+        print("Tem que ser 3, mano! Você colocou", len(entrada))
+        return
+
+    # 1. Mastiga com SHA256
+    hash_total = hashlib.sha256(entrada.encode()).hexdigest()
+    
+    # 2. Pega os 2 primeiros caracteres do hash
+    dois = hash_total[:2].upper()
+    
+    print(f"Você colocou: {entrada}")
+    print(f"Hash completo: {hash_total}")
+    print(f"Saíram 2 caracteres: {dois}")
+    print("---")
+    return dois
+
+# Testa aí
+gerador_2("AAA")
+gerador_2("AAB")
+gerador_2("ABC")
+gerador_2("123")
+gerador_2("5K5")
