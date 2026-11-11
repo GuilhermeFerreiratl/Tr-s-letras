@@ -1,26 +1,45 @@
-import hashlib
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador 3 -> 2</title>
+<style>
+  body { background: #111; color: #fff; font-family: sans-serif; text-align: center; padding: 30px; }
+  input { font-size: 30px; text-align: center; width: 200px; padding: 10px; border-radius: 10px; border: none; }
+  button { font-size: 20px; padding: 10px 20px; margin-top: 15px; border-radius: 10px; background: #00ff88; border: none; font-weight: bold; }
+  #saida { font-size: 50px; margin-top: 20px; color: #00ff88; font-weight: bold; letter-spacing: 5px; }
+  #hash { font-size: 12px; color: #888; word-break: break-all; margin-top: 10px; }
+</style>
+</head>
+<body>
+  <h1>GERADOR 3 -> 2</h1>
+  <p>Coloca 3 letras ou números</p>
+  <input id="entrada" maxlength="3" placeholder="Ex: ABC" />
+  <br>
+  <button onclick="gerar()">MASTIGAR</button>
+  <div id="saida">--</div>
+  <div id="hash"></div>
 
-def gerador_2(entrada):
-    # Só aceita 3 caracteres
-    if len(entrada) != 3:
-        print("Tem que ser 3, mano! Você colocou", len(entrada))
-        return
-
-    # 1. Mastiga com SHA256
-    hash_total = hashlib.sha256(entrada.encode()).hexdigest()
-    
-    # 2. Pega os 2 primeiros caracteres do hash
-    dois = hash_total[:2].upper()
-    
-    print(f"Você colocou: {entrada}")
-    print(f"Hash completo: {hash_total}")
-    print(f"Saíram 2 caracteres: {dois}")
-    print("---")
-    return dois
-
-# Testa aí
-gerador_2("AAA")
-gerador_2("AAB")
-gerador_2("ABC")
-gerador_2("123")
-gerador_2("5K5")
+<script>
+async function gerar() {
+  let entrada = document.getElementById("entrada").value;
+  if (entrada.length !== 3) {
+    alert("Tem que ser 3 caracteres, mano!");
+    return;
+  }
+  // Mastiga com SHA256 de verdade
+  let dados = new TextEncoder().encode(entrada);
+  let hashBuffer = await crypto.subtle.digest('SHA-256', dados);
+  let hashArray = Array.from(new Uint8Array(hashBuffer));
+  let hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  
+  // Pega só os 2 primeiros caracteres
+  let dois = hashHex.substring(0, 2).toUpperCase();
+  
+  document.getElementById("saida").innerText = dois;
+  document.getElementById("hash").innerText = "Hash completo: " + hashHex;
+}
+</script>
+</body>
+</html>
